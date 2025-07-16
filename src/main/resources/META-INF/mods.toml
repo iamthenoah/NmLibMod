@@ -11,17 +11,18 @@ description = "${modDescription}"
 logoFile = "${modName}.png"
 displayURL = "${modDisplayURL}"
 issueTrackerURL = "${modIssueTrackerURL}"
+modSide="CLIENT"
 
 [[dependencies.${modId}]]
 modId="forge"
 mandatory=true
 versionRange="${forgeVersionRange}"
 ordering="NONE"
-side="BOTH"
+side="CLIENT"
 
 [[dependencies.${modId}]]
 modId="minecraft"
 mandatory=true
 versionRange="${minecraftVersionRange}"
 ordering="NONE"
-side="BOTH"
+side="CLIENT"
