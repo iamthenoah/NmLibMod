@@ -33,11 +33,22 @@ sourceSets.main.resources {
     srcDir 'src/generated/resources'
 }
 
+repositories {
+    maven {
+        url = uri("https://maven.pkg.github.com/iamthenoah/JavaBleAdvertiser")
+        credentials {
+            username = project.findProperty("gpr.user") ?: System.getenv("USERNAME")
+            password = project.findProperty("gpr.key") ?: System.getenv("TOKEN")
+        }
+    }
+}
+
 dependencies {
     minecraft "net.minecraftforge:forge:${minecraftVersion}-${forgeVersion}"
     testAnnotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
     implementation 'org.spongepowered:mixin:0.8.5'
+    implementation 'com.greffnoah:bleadvertiser:1.0'
 }
 
 tasks.named('processResources', ProcessResources).configure {
