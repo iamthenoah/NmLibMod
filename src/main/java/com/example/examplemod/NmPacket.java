@@ -38,9 +38,10 @@ public enum NmPacket {
                     BleAdvertiser.StopBLEAdvert();
                     
                     if (!isStop) OFF.send(duration);
-                    DEBOUNCE = false;
                 } catch (Exception exception) {
                     // do nothing
+                } finally {
+                    DEBOUNCE = false;
                 }
             }).start();
         }
