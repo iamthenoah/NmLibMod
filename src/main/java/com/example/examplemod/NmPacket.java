@@ -12,6 +12,8 @@ public enum NmPacket {
     MODE_8(false, (byte) 0xD4, (byte) 0x66, (byte) 0x0B, (byte) 0xB1),
     MODE_9(false, (byte) 0x13, (byte) 0x12, (byte) 0x0B, (byte) 0xA0);
 
+    static boolean DEBOUNCE;
+    
     final boolean isStop;
     final byte[] payload;
     
@@ -26,16 +28,21 @@ public enum NmPacket {
     }
     
     public void send(int duration) {
-        new Thread(() -> {
-            try {
-                BleAdvertiser.StartBLEAdvert(0xFFF0, payload, new byte[0]);
-                Thread.sleep(duration);
-                BleAdvertiser.StopBLEAdvert();
-                
-                if (!isStop) OFF.send(duration);
-            } catch (Exception exception) {
-                // do nothing
-            }
-        }).start();
+        if (!DEBOUNCE || this == OFF) {
+            DEBOUNCE = true;
+
+            new Thread(() -> {
+                try {
+                    BleAdvertiser.StartBLEAdvert(0xFFF0, payload, new byte[0]);
+                    Thread.sleep(duration);
+                    BleAdvertiser.StopBLEAdvert();
+                    
+                    if (!isStop) OFF.send(duration);
+                    DEBOUNCE = false;
+                } catch (Exception exception) {
+                    // do nothing
+                }
+            }).start();
+        }
     }
 }

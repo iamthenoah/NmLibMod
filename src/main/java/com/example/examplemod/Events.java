@@ -12,7 +12,7 @@ import java.util.Arrays;
 @Mod.EventBusSubscriber
 public final class Events {
 
-    private static int MODE = 1;
+    private static int MODE = 4;
     
     @SubscribeEvent
     public static void onInputEventKeyDebug(LivingAttackEvent event) {
@@ -21,7 +21,7 @@ public final class Events {
         }
     }
     
-    @SubscribeEvent
+//    @SubscribeEvent
     public static void onInputEventKeyDebug(InputEvent.Key event) {
         if (event.getAction() == InputConstants.PRESS && event.getKey() == InputConstants.KEY_1) {
             MODE = 1;
