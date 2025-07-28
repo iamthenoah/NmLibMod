@@ -26,14 +26,16 @@ public enum NmPacket {
     }
     
     public void send(int duration) {
-//        new Thread(() -> {
-//            try {
+        new Thread(() -> {
+            try {
                 BleAdvertiser.StartBLEAdvert(0xFFF0, payload, new byte[0]);
-//                Thread.sleep(duration);
-//                if (!isStop) OFF.send(duration);
-//            } catch (Exception exception) {
-//                // do nothing
-//            }
-//        }).start();
+                Thread.sleep(duration);
+                BleAdvertiser.StopBLEAdvert();
+                
+                if (!isStop) OFF.send(duration);
+            } catch (Exception exception) {
+                // do nothing
+            }
+        }).start();
     }
 }
