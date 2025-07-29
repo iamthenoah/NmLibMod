@@ -2,6 +2,7 @@ package com.example.examplemod;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
@@ -35,6 +36,11 @@ public final class ExampleMod {
 		@SubscribeEvent
 		public static void onFMLClientSetupEvent(FMLClientSetupEvent event) {
 			// client setup event
+		}
+
+		@SubscribeEvent
+		public static void onRegisterKeyMappingsEvent(RegisterKeyMappingsEvent event) {
+			event.register(NmScreen.OPEN_SCREEN);
 		}
 	}
 }

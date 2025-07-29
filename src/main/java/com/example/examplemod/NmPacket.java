@@ -1,5 +1,9 @@
 package com.example.examplemod;
 
+import com.google.common.util.concurrent.Runnables;
+
+import java.util.concurrent.atomic.AtomicBoolean;
+
 public enum NmPacket {
     OFF(true, (byte) 0x9C, (byte) 0x6E, (byte) 0x0B, (byte) 0x3D),
     MODE_1(false, (byte) 0x15, (byte) 0x6F, (byte) 0x0B, (byte) 0x2C),
@@ -12,7 +16,7 @@ public enum NmPacket {
     MODE_8(false, (byte) 0xD4, (byte) 0x66, (byte) 0x0B, (byte) 0xB1),
     MODE_9(false, (byte) 0x13, (byte) 0x12, (byte) 0x0B, (byte) 0xA0);
 
-    static boolean DEBOUNCE;
+    private static final AtomicBoolean DEBOUNCE = new AtomicBoolean();
     
     final boolean isStop;
     final byte[] payload;
@@ -26,24 +30,29 @@ public enum NmPacket {
                 (byte) 0x13, (byte) 0x14, (byte) 0x15, (byte) 0x16, (byte) 0x17, (byte) 0x18, (byte) 0x19
         };
     }
-    
-    public void send(int duration) {
-        if (!DEBOUNCE || this == OFF) {
-            DEBOUNCE = true;
 
+    public void send(int duration) {
+        send(duration, Runnables::doNothing);
+    }
+
+    public boolean send(int duration, Runnable onDone) {
+        if (this == OFF || !DEBOUNCE.compareAndSet(false, true)) {
             new Thread(() -> {
                 try {
                     BleAdvertiser.StartBLEAdvert(0xFFF0, payload, new byte[0]);
                     Thread.sleep(duration);
                     BleAdvertiser.StopBLEAdvert();
-                    
-                    if (!isStop) OFF.send(duration);
-                } catch (Exception exception) {
+
+                    if (!isStop) OFF.send(duration, onDone);
+                    onDone.run();
+                } catch (Exception ignored) {
                     // do nothing
                 } finally {
-                    DEBOUNCE = false;
+                    DEBOUNCE.set(false);
                 }
             }).start();
+            return true;
         }
+        return false;
     }
 }

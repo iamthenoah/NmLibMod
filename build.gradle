@@ -34,6 +34,9 @@ sourceSets.main.resources {
 }
 
 repositories {
+    maven { 
+        url = 'https://azalealibrary.net/releases/' 
+    }
     maven {
         url = uri("https://maven.pkg.github.com/iamthenoah/JavaBleAdvertiser")
         credentials {
@@ -48,6 +51,7 @@ dependencies {
     testAnnotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
     implementation 'org.spongepowered:mixin:0.8.5'
+    implementation fg.deobf("com.than00ber.simplegui:simplegui:${simpleguiVersion}")
 }
 
 tasks.named('processResources', ProcessResources).configure {
